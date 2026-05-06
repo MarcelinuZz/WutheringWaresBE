@@ -1,0 +1,11 @@
+Root Folder
+===========
+npm init -y
+npm install express
+npm install --save-dev nodemon
+npm install concurrently --save-dev
+
+gateway-service Folder
+======================
+npm install express mysql2 cors dotenv http-proxy-middleware mysql2 morgan
+npm install --save-dev nodemon
