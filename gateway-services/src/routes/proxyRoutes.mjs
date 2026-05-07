@@ -8,7 +8,7 @@ const setupProxyRoutes = () => {
         target: process.env.AUTH_SERVICE_URL,
         changeOrigin: true,
         pathRewrite: {
-            '^auth': ''
+            '^/auth': '/auth'
         }
     }));
 
@@ -16,7 +16,7 @@ const setupProxyRoutes = () => {
         target: process.env.USER_SERVICE_URL,
         changeOrigin: true,
         pathRewrite: {
-            '^users': ''
+            '^/users': '/users'
         }
     }));
 
