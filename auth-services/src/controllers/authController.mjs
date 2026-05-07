@@ -61,12 +61,21 @@ export const verifyOTPAndRegister = async (req, res, next) => {
         const { full_name, email, password, otp_code } = req.body;
 
         const [otpRows] = await db.query(
+            'SELECT * FROM otp_codes WHERE otp_code = ? AND is_verified = FALSE',
+            [otp_code]
+        );
+
+        const [otpEmailRows] = await db.query(
             'SELECT * FROM otp_codes WHERE email = ? AND otp_code = ? AND is_verified = FALSE',
             [email, otp_code]
         );
 
-        if (otpRows.length === 0) {
-            return res.status(400).json({ success: false, message: 'Kode OTP tidak valid.' });
+        if (otpEmailRows.length === 0) {
+            if (otpRows.length === 0) {
+                return res.status(400).json({ success: false, message: 'Kode OTP tidak valid.' });
+            }
+
+            return res.status(400).json({ success: false, message: 'Email tidak sesuai dengan kode OTP.' });
         }
 
         const otpData = otpRows[0];
