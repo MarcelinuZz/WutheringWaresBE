@@ -22,19 +22,19 @@ import {
 
 const router = Router();
 
-router.post('/auth/register/send-otp', sendOTPValidator, validate, sendOTP);
-router.post('/auth/register/verify-otp', verifyOTPAndRegisterValidator, validate, verifyOTPAndRegister);
-router.post('/auth/login', loginValidator, validate, login);
+router.post('/register/send-otp', sendOTPValidator, validate, sendOTP);
+router.post('/register/verify-otp', verifyOTPAndRegisterValidator, validate, verifyOTPAndRegister);
+router.post('/login', loginValidator, validate, login);
 
-router.get('/auth/google', googleAuth);
-router.get('/auth/google/callback', googleCallback);
+router.get('/google', googleAuth);
+router.get('/google/callback', googleCallback);
 
-router.get('/auth/discord', discordAuth);
-router.get('/auth/discord/callback', discordCallback);
+router.get('/discord', discordAuth);
+router.get('/discord/callback', discordCallback);
 
-router.post('/auth/exchange-token', exchangeTokenValidator, validate, exchangeToken);
+router.post('/exchange-token', exchangeTokenValidator, validate, exchangeToken);
 
-router.post('/auth/logout', authMiddleware, logout);
-router.post('/auth/terminate-session', authMiddleware, terminateSession);
+router.post('/logout', authMiddleware, logout);
+router.post('/terminate-session', authMiddleware, terminateSession);
 
 export default router;
