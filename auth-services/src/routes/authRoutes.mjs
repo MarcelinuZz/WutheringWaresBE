@@ -34,7 +34,7 @@ router.get('/discord/callback', discordCallback);
 
 router.post('/exchange-token', exchangeTokenValidator, validate, exchangeToken);
 
-router.post('/logout', authMiddleware, logout);
-router.post('/terminate-session', authMiddleware, terminateSession);
+router.delete('/logout', authMiddleware, logout);
+router.delete('/terminate-session', authMiddleware, terminateSession);
 
 export default router;

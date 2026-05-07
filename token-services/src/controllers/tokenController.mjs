@@ -84,7 +84,7 @@ export const rotateToken = async (req, res, next) => {
 
         const userId = rows[0].user_id;
 
-        await db.query('DELETE FROM user_tokens WHERE token = ?', [token]);
+        await db.query('DELETE FROM user_tokens WHERE user_id = ?', [userId]);
 
         const newToken = generateToken(32);
         const expiresAt = new Date();

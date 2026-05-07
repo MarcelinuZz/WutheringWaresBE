@@ -146,12 +146,6 @@ export const login = (req, res, next) => {
             res.json({
                 success: true,
                 message: 'Login berhasil.',
-                user: {
-                    id: user.id,
-                    full_name: user.full_name,
-                    email: user.email,
-                    role: user.role
-                },
                 token: tokenResult.token,
                 expires_at: tokenResult.expires_at
             });
