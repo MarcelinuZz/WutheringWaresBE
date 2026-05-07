@@ -5,6 +5,6 @@ const routeErrorHandler = (req, res, next) => {
         status: 404,
         timestamp: new Date().toISOString()
     });
-}
+};
 
 export default routeErrorHandler;
