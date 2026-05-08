@@ -233,6 +233,66 @@ export const exchangeToken = async (req, res, next) => {
 };
 
 
+export const googleBindAuth = passport.authenticate('google-bind', {
+    session: false,
+    scope: ['profile', 'email']
+});
+
+export const googleBindCallback = (req, res, next) => {
+    passport.authenticate('google-bind', { session: false }, async (err, profile, info) => {
+        try {
+            if (err) return next(err);
+
+            if (!profile) {
+                return res.status(401).json({
+                    success: false,
+                    message: info?.message || 'Google bind authentication gagal.'
+                });
+            }
+
+            const bindCodeResult = await requestTokenService('/bind-codes/generate', 'POST', {
+                provider: profile.provider,
+                provider_id: profile.provider_id
+            });
+
+            const redirectUrl = `${process.env.BIND_CODE_REDIRECT_URL}?bind_code=${bindCodeResult.code}&provider=google`;
+            res.redirect(redirectUrl);
+        } catch (error) {
+            next(error);
+        }
+    })(req, res, next);
+};
+
+export const discordBindAuth = passport.authenticate('discord-bind', {
+    session: false
+});
+
+export const discordBindCallback = (req, res, next) => {
+    passport.authenticate('discord-bind', { session: false }, async (err, profile, info) => {
+        try {
+            if (err) return next(err);
+
+            if (!profile) {
+                return res.status(401).json({
+                    success: false,
+                    message: info?.message || 'Discord bind authentication gagal.'
+                });
+            }
+
+            const bindCodeResult = await requestTokenService('/bind-codes/generate', 'POST', {
+                provider: profile.provider,
+                provider_id: profile.provider_id
+            });
+
+            const redirectUrl = `${process.env.BIND_CODE_REDIRECT_URL}?bind_code=${bindCodeResult.code}&provider=discord`;
+            res.redirect(redirectUrl);
+        } catch (error) {
+            next(error);
+        }
+    })(req, res, next);
+};
+
+
 export const logout = async (req, res, next) => {
     try {
         await requestTokenService('/tokens/revoke', 'DELETE', {

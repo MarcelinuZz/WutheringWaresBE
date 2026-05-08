@@ -37,3 +37,19 @@ export const exchangeAuthCodeValidator = [
         .trim()
         .notEmpty().withMessage('Code diperlukan.')
 ];
+
+export const createBindCodeValidator = [
+    body('provider')
+        .trim()
+        .notEmpty().withMessage('Provider diperlukan.')
+        .isIn(['google', 'discord']).withMessage('Provider harus google atau discord.'),
+    body('provider_id')
+        .trim()
+        .notEmpty().withMessage('Provider ID diperlukan.')
+];
+
+export const exchangeBindCodeValidator = [
+    body('code')
+        .trim()
+        .notEmpty().withMessage('Bind code diperlukan.')
+];

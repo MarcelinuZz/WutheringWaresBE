@@ -168,6 +168,48 @@ passport.use(new DiscordStrategy(
     }
 ));
 
+passport.use('google-bind', new GoogleStrategy(
+    {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: process.env.GOOGLE_BIND_CALLBACK_URL,
+        scope: ['profile', 'email']
+    },
+    async (accessToken, refreshToken, profile, done) => {
+        try {
+            return done(null, {
+                provider: 'google',
+                provider_id: profile.id,
+                email: profile.emails[0].value,
+                displayName: profile.displayName
+            });
+        } catch (error) {
+            return done(error);
+        }
+    }
+));
+
+passport.use('discord-bind', new DiscordStrategy(
+    {
+        clientId: process.env.DISCORD_CLIENT_ID,
+        clientSecret: process.env.DISCORD_CLIENT_SECRET,
+        callbackUrl: process.env.DISCORD_BIND_CALLBACK_URL,
+        scope: ['identify', 'email']
+    },
+    async (accessToken, refreshToken, profile, done) => {
+        try {
+            return done(null, {
+                provider: 'discord',
+                provider_id: profile.id,
+                email: profile.email,
+                displayName: profile.global_name || profile.username
+            });
+        } catch (error) {
+            return done(error);
+        }
+    }
+));
+
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
