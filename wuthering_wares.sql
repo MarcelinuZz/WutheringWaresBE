@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Bulan Mei 2026 pada 08.37
+-- Waktu pembuatan: 08 Bulan Mei 2026 pada 15.49
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -76,7 +76,8 @@ CREATE TABLE `equipments` (
   `stock` int(11) NOT NULL DEFAULT 0,
   `price` bigint(20) NOT NULL,
   `image` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `rarity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -200,6 +201,13 @@ CREATE TABLE `user_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data untuk tabel `user_tokens`
+--
+
+INSERT INTO `user_tokens` (`id`, `user_id`, `token`, `created_at`, `expires_at`) VALUES
+(29, 'f924601d-078f-4518-b26c-790cf58a41b6', 'LfgiaFWDL5mRHgrRlN1NEDRkfjXfnD2L', '2026-05-08 06:40:59', '2026-05-10 06:40:59');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -300,7 +308,7 @@ ALTER TABLE `otp_codes`
 -- AUTO_INCREMENT untuk tabel `user_tokens`
 --
 ALTER TABLE `user_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
