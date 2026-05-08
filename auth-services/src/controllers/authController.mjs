@@ -167,10 +167,10 @@ export const googleCallback = (req, res, next) => {
             if (err) return next(err);
 
             if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message: info?.message || 'Google authentication gagal.'
-                });
+                const errorCode = info?.code || 'AUTH_FAILED';
+                const errorMessage = encodeURIComponent(info?.message || 'Google authentication gagal.');
+                const redirectUrl = `${process.env.AUTH_CODE_REDIRECT_URL}?error=${errorCode}&message=${errorMessage}`;
+                return res.redirect(redirectUrl);
             }
 
             const authCodeResult = await requestTokenService('/auth-codes/generate', 'POST', {
@@ -196,10 +196,10 @@ export const discordCallback = (req, res, next) => {
             if (err) return next(err);
 
             if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message: info?.message || 'Discord authentication gagal.'
-                });
+                const errorCode = info?.code || 'AUTH_FAILED';
+                const errorMessage = encodeURIComponent(info?.message || 'Discord authentication gagal.');
+                const redirectUrl = `${process.env.AUTH_CODE_REDIRECT_URL}?error=${errorCode}&message=${errorMessage}`;
+                return res.redirect(redirectUrl);
             }
 
             const authCodeResult = await requestTokenService('/auth-codes/generate', 'POST', {
@@ -230,6 +230,66 @@ export const exchangeToken = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+};
+
+
+export const googleBindAuth = passport.authenticate('google-bind', {
+    session: false,
+    scope: ['profile', 'email']
+});
+
+export const googleBindCallback = (req, res, next) => {
+    passport.authenticate('google-bind', { session: false }, async (err, profile, info) => {
+        try {
+            if (err) return next(err);
+
+            if (!profile) {
+                return res.status(401).json({
+                    success: false,
+                    message: info?.message || 'Google bind authentication gagal.'
+                });
+            }
+
+            const bindCodeResult = await requestTokenService('/bind-codes/generate', 'POST', {
+                provider: profile.provider,
+                provider_id: profile.provider_id
+            });
+
+            const redirectUrl = `${process.env.BIND_CODE_REDIRECT_URL}?bind_code=${bindCodeResult.code}&provider=google`;
+            res.redirect(redirectUrl);
+        } catch (error) {
+            next(error);
+        }
+    })(req, res, next);
+};
+
+export const discordBindAuth = passport.authenticate('discord-bind', {
+    session: false
+});
+
+export const discordBindCallback = (req, res, next) => {
+    passport.authenticate('discord-bind', { session: false }, async (err, profile, info) => {
+        try {
+            if (err) return next(err);
+
+            if (!profile) {
+                return res.status(401).json({
+                    success: false,
+                    message: info?.message || 'Discord bind authentication gagal.'
+                });
+            }
+
+            const bindCodeResult = await requestTokenService('/bind-codes/generate', 'POST', {
+                provider: profile.provider,
+                provider_id: profile.provider_id
+            });
+
+            const redirectUrl = `${process.env.BIND_CODE_REDIRECT_URL}?bind_code=${bindCodeResult.code}&provider=discord`;
+            res.redirect(redirectUrl);
+        } catch (error) {
+            next(error);
+        }
+    })(req, res, next);
 };
 
 

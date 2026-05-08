@@ -3,6 +3,7 @@ import { generateToken, generateAuthCode } from '../utils/generateRandom.mjs';
 
 const TOKEN_EXPIRY_DAYS = 2;
 const AUTH_CODE_EXPIRY_MINUTES = 5;
+const BIND_CODE_EXPIRY_MINUTES = 5;
 
 export const createToken = async (req, res, next) => {
     try {
@@ -156,6 +157,61 @@ export const exchangeAuthCode = async (req, res, next) => {
         );
 
         res.json({ success: true, token, expires_at: expiresAt });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const createBindCode = async (req, res, next) => {
+    try {
+        const { provider, provider_id } = req.body;
+
+        const code = generateAuthCode(64);
+
+        const expiresAt = new Date();
+        expiresAt.setMinutes(expiresAt.getMinutes() + BIND_CODE_EXPIRY_MINUTES);
+
+        await db.query(
+            'INSERT INTO bind_codes (code, provider, provider_id, expires_at) VALUES (?, ?, ?, ?)',
+            [code, provider, provider_id, expiresAt]
+        );
+
+        res.status(201).json({ success: true, code });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const exchangeBindCode = async (req, res, next) => {
+    try {
+        const { code } = req.body;
+
+        const [rows] = await db.query(
+            'SELECT id, provider, provider_id, expires_at, is_used FROM bind_codes WHERE code = ?',
+            [code]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Bind code tidak valid.' });
+        }
+
+        const bindCode = rows[0];
+
+        if (bindCode.is_used) {
+            return res.status(400).json({ success: false, message: 'Bind code sudah digunakan.' });
+        }
+
+        if (new Date(bindCode.expires_at) < new Date()) {
+            return res.status(400).json({ success: false, message: 'Bind code telah kadaluarsa.' });
+        }
+
+        await db.query('UPDATE bind_codes SET is_used = TRUE WHERE id = ?', [bindCode.id]);
+
+        res.json({
+            success: true,
+            provider: bindCode.provider,
+            provider_id: bindCode.provider_id
+        });
     } catch (error) {
         next(error);
     }

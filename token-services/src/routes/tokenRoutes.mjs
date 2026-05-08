@@ -5,7 +5,9 @@ import {
     revokeToken,
     rotateToken,
     createAuthCode,
-    exchangeAuthCode
+    exchangeAuthCode,
+    createBindCode,
+    exchangeBindCode
 } from '../controllers/tokenController.mjs';
 import validate from '../middleware/validate.mjs';
 import {
@@ -14,7 +16,9 @@ import {
     revokeTokenValidator,
     rotateTokenValidator,
     createAuthCodeValidator,
-    exchangeAuthCodeValidator
+    exchangeAuthCodeValidator,
+    createBindCodeValidator,
+    exchangeBindCodeValidator
 } from '../validators/tokenValidators.mjs';
 
 const router = Router();
@@ -26,5 +30,8 @@ router.post('/tokens/rotate', rotateTokenValidator, validate, rotateToken);
 
 router.post('/auth-codes/generate', createAuthCodeValidator, validate, createAuthCode);
 router.post('/auth-codes/exchange', exchangeAuthCodeValidator, validate, exchangeAuthCode);
+
+router.post('/bind-codes/generate', createBindCodeValidator, validate, createBindCode);
+router.post('/bind-codes/exchange', exchangeBindCodeValidator, validate, exchangeBindCode);
 
 export default router;

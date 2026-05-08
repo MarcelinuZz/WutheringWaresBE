@@ -8,6 +8,10 @@ import {
     discordAuth,
     discordCallback,
     exchangeToken,
+    googleBindAuth,
+    googleBindCallback,
+    discordBindAuth,
+    discordBindCallback,
     logout,
     terminateSession
 } from '../controllers/authController.mjs';
@@ -33,6 +37,12 @@ router.get('/discord', discordAuth);
 router.get('/discord/callback', discordCallback);
 
 router.post('/exchange-token', exchangeTokenValidator, validate, exchangeToken);
+
+router.get('/bind/google', googleBindAuth);
+router.get('/bind/google/callback', googleBindCallback);
+
+router.get('/bind/discord', discordBindAuth);
+router.get('/bind/discord/callback', discordBindCallback);
 
 router.delete('/logout', authMiddleware, logout);
 router.delete('/terminate-session', authMiddleware, terminateSession);

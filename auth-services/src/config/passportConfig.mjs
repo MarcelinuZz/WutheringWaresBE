@@ -78,12 +78,10 @@ passport.use(new GoogleStrategy(
             );
 
             if (existingUsers.length > 0) {
-                const user = existingUsers[0];
-                await db.query(
-                    'INSERT INTO user_identities (id, user_id, provider, provider_id) VALUES (?, ?, ?, ?)',
-                    [uuidv4(), user.id, 'google', providerId]
-                );
-                return done(null, user);
+                return done(null, false, {
+                    code: 'EMAIL_ALREADY_EXISTS',
+                    message: 'Akun dengan email ini sudah terdaftar. Silakan login dengan metode yang ada, lalu hubungkan akun Google dari halaman Settings.'
+                });
             }
 
             const userId = uuidv4();
@@ -141,12 +139,10 @@ passport.use(new DiscordStrategy(
             );
 
             if (existingUsers.length > 0) {
-                const user = existingUsers[0];
-                await db.query(
-                    'INSERT INTO user_identities (id, user_id, provider, provider_id) VALUES (?, ?, ?, ?)',
-                    [uuidv4(), user.id, 'discord', providerId]
-                );
-                return done(null, user);
+                return done(null, false, {
+                    code: 'EMAIL_ALREADY_EXISTS',
+                    message: 'Akun dengan email ini sudah terdaftar. Silakan login dengan metode yang ada, lalu hubungkan akun Discord dari halaman Settings.'
+                });
             }
 
             const userId = uuidv4();
@@ -162,6 +158,48 @@ passport.use(new DiscordStrategy(
 
             const [newUser] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
             return done(null, newUser[0]);
+        } catch (error) {
+            return done(error);
+        }
+    }
+));
+
+passport.use('google-bind', new GoogleStrategy(
+    {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: process.env.GOOGLE_BIND_CALLBACK_URL,
+        scope: ['profile', 'email']
+    },
+    async (accessToken, refreshToken, profile, done) => {
+        try {
+            return done(null, {
+                provider: 'google',
+                provider_id: profile.id,
+                email: profile.emails[0].value,
+                displayName: profile.displayName
+            });
+        } catch (error) {
+            return done(error);
+        }
+    }
+));
+
+passport.use('discord-bind', new DiscordStrategy(
+    {
+        clientId: process.env.DISCORD_CLIENT_ID,
+        clientSecret: process.env.DISCORD_CLIENT_SECRET,
+        callbackUrl: process.env.DISCORD_BIND_CALLBACK_URL,
+        scope: ['identify', 'email']
+    },
+    async (accessToken, refreshToken, profile, done) => {
+        try {
+            return done(null, {
+                provider: 'discord',
+                provider_id: profile.id,
+                email: profile.email,
+                displayName: profile.global_name || profile.username
+            });
         } catch (error) {
             return done(error);
         }
