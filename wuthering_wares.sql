@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Bulan Mei 2026 pada 16.35
+-- Waktu pembuatan: 08 Bulan Mei 2026 pada 16.50
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -52,32 +52,22 @@ CREATE TABLE `bind_codes` (
   `is_used` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data untuk tabel `bind_codes`
---
-
-INSERT INTO `bind_codes` (`id`, `code`, `provider`, `provider_id`, `created_at`, `expires_at`, `is_used`) VALUES
-(1, 'cefa959023ba73d5c950040bc18833878151f58235677bce1eac8e7922ec56d0', 'google', '101357322244149981937', '2026-05-07 18:26:18', '2026-05-08 01:31:18', 1),
-(2, '84eaa29bea94ccb73afb953be6f3c19c73763d9a8bd794964c02291652227b5a', 'google', '101357322244149981937', '2026-05-07 18:30:05', '2026-05-08 01:35:05', 1),
-(3, '2f05baa332048d0eec650cd7b308ee3b4cd1a8828ec13add1eb31ba103836439', 'discord', '1501955162082643988', '2026-05-07 18:36:08', '2026-05-08 01:41:08', 1),
-(4, '104ac4270b44df65d4100074cd7e8884fea50fe9cc397edda8b231f91cea2475', 'google', '101357322244149981937', '2026-05-07 18:42:08', '2026-05-08 01:47:08', 1);
-
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `equipments`
+-- Struktur dari tabel `item`
 --
 
-CREATE TABLE `equipments` (
+CREATE TABLE `item` (
   `id` varchar(36) NOT NULL,
   `name` varchar(150) NOT NULL,
   `type` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
   `stock` int(11) NOT NULL DEFAULT 0,
   `price` bigint(20) NOT NULL,
+  `rarity` int(11) NOT NULL,
   `image` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `rarity` int(11) NOT NULL
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -94,15 +84,6 @@ CREATE TABLE `otp_codes` (
   `expires_at` datetime NOT NULL,
   `is_verified` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `otp_codes`
---
-
-INSERT INTO `otp_codes` (`id`, `email`, `otp_code`, `created_at`, `expires_at`, `is_verified`) VALUES
-(1, 'linus@gmail.com', '589001', '2026-05-07 15:47:32', '2026-05-07 22:52:32', 0),
-(4, 'wijayaoeymarcelinus@gmail.com', '930970', '2026-05-07 18:29:01', '2026-05-08 01:34:01', 0),
-(7, 'efwarms@gmail.com', '833385', '2026-05-08 06:31:34', '2026-05-08 13:36:34', 1);
 
 -- --------------------------------------------------------
 
@@ -128,7 +109,7 @@ CREATE TABLE `transactions` (
 CREATE TABLE `transaction_details` (
   `id` varchar(36) NOT NULL,
   `transaction_id` varchar(36) NOT NULL,
-  `equipment_id` varchar(36) NOT NULL,
+  `item_id` varchar(36) NOT NULL,
   `quantity` int(11) NOT NULL,
   `subtotal` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -152,7 +133,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `full_name`, `email`, `role`, `created_at`) VALUES
-('f924601d-078f-4518-b26c-790cf58a41b6', 'Administrator', 'admin@mhslab.com', 'admin', '2026-05-08 06:36:57');
+('f924601d-078f-4518-b26c-790cf58a41b6', 'Administrator', 'admin@mhslab.com', 'admin', '2026-05-08 14:50:34');
 
 -- --------------------------------------------------------
 
@@ -201,13 +182,6 @@ CREATE TABLE `user_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `user_tokens`
---
-
-INSERT INTO `user_tokens` (`id`, `user_id`, `token`, `created_at`, `expires_at`) VALUES
-(29, 'f924601d-078f-4518-b26c-790cf58a41b6', 'LfgiaFWDL5mRHgrRlN1NEDRkfjXfnD2L', '2026-05-08 06:40:59', '2026-05-10 06:40:59');
-
---
 -- Indexes for dumped tables
 --
 
@@ -227,9 +201,9 @@ ALTER TABLE `bind_codes`
   ADD UNIQUE KEY `code` (`code`);
 
 --
--- Indeks untuk tabel `equipments`
+-- Indeks untuk tabel `item`
 --
-ALTER TABLE `equipments`
+ALTER TABLE `item`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -251,7 +225,7 @@ ALTER TABLE `transactions`
 ALTER TABLE `transaction_details`
   ADD PRIMARY KEY (`id`),
   ADD KEY `transaction_id` (`transaction_id`),
-  ADD KEY `equipment_id` (`equipment_id`);
+  ADD KEY `item_id` (`item_id`);
 
 --
 -- Indeks untuk tabel `users`
@@ -290,25 +264,25 @@ ALTER TABLE `user_tokens`
 -- AUTO_INCREMENT untuk tabel `auth_codes`
 --
 ALTER TABLE `auth_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `bind_codes`
 --
 ALTER TABLE `bind_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `otp_codes`
 --
 ALTER TABLE `otp_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_tokens`
 --
 ALTER TABLE `user_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -331,7 +305,7 @@ ALTER TABLE `transactions`
 --
 ALTER TABLE `transaction_details`
   ADD CONSTRAINT `transaction_details_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `transaction_details_ibfk_2` FOREIGN KEY (`equipment_id`) REFERENCES `equipments` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `transaction_details_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `user_identities`
