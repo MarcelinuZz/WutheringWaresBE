@@ -1,11 +1,45 @@
+MYSQL
+=====
+import wuthering_wares.sql
+
+lalu jalankan query
+INSERT INTO users (id, full_name, email, role) 
+VALUES ("f924601d-078f-4518-b26c-790cf58a41b6", 'Administrator', 'admin@mhslab.com', 'admin');
+
+INSERT INTO user_passwords (id, user_id, password)
+VALUES ("5d28d68e-914b-4c31-9686-67b8dbecd5ad", "f924601d-078f-4518-b26c-790cf58a41b6", '$2b$12$DvzteDNxHDtfr8hDrrjYN.JDLWiPNiad9D0L13vmyiGc2IyxjZCma');
+
 Root Folder
 ===========
 npm init -y
-npm install express
-npm install --save-dev nodemon
 npm install concurrently --save-dev
 
-gateway-service Folder
+gateway-services Folder
 ======================
-npm install express mysql2 cors dotenv http-proxy-middleware mysql2 morgan
+npm init -y
+npm install express mysql2 cors dotenv http-proxy-middleware morgan
+npm install --save-dev nodemon
+
+auth-services Folder
+====================
+npm init -y
+npm install express cors dotenv morgan mysql2 bcryptjs express-validator passport passport-local passport-google-oauth20 passport-discord-auth uuid
+npm install --save-dev nodemon
+
+user-services Folder
+====================
+npm init -y
+npm install express cors dotenv morgan mysql2 bcryptjs express-validator uuid
+npm install --save-dev nodemon
+
+token-services Folder
+=====================
+npm init -y
+npm install express cors dotenv morgan mysql2 express-validator uuid
+npm install --save-dev nodemon
+
+email-services Folder
+=====================
+npm init -y
+npm install express cors dotenv morgan nodemailer express-validator
 npm install --save-dev nodemon
