@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 06 Bulan Mei 2026 pada 14.42
+-- Waktu pembuatan: 08 Bulan Mei 2026 pada 08.37
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -24,6 +24,47 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `auth_codes`
+--
+
+CREATE TABLE `auth_codes` (
+  `id` int(11) NOT NULL,
+  `user_id` varchar(36) NOT NULL,
+  `code` varchar(64) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `expires_at` datetime NOT NULL,
+  `is_used` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `bind_codes`
+--
+
+CREATE TABLE `bind_codes` (
+  `id` int(11) NOT NULL,
+  `code` varchar(64) NOT NULL,
+  `provider` varchar(50) NOT NULL,
+  `provider_id` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `expires_at` datetime NOT NULL,
+  `is_used` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `bind_codes`
+--
+
+INSERT INTO `bind_codes` (`id`, `code`, `provider`, `provider_id`, `created_at`, `expires_at`, `is_used`) VALUES
+(1, 'cefa959023ba73d5c950040bc18833878151f58235677bce1eac8e7922ec56d0', 'google', '101357322244149981937', '2026-05-07 18:26:18', '2026-05-08 01:31:18', 1),
+(2, '84eaa29bea94ccb73afb953be6f3c19c73763d9a8bd794964c02291652227b5a', 'google', '101357322244149981937', '2026-05-07 18:30:05', '2026-05-08 01:35:05', 1),
+(3, '2f05baa332048d0eec650cd7b308ee3b4cd1a8828ec13add1eb31ba103836439', 'discord', '1501955162082643988', '2026-05-07 18:36:08', '2026-05-08 01:41:08', 1),
+(4, '104ac4270b44df65d4100074cd7e8884fea50fe9cc397edda8b231f91cea2475', 'google', '101357322244149981937', '2026-05-07 18:42:08', '2026-05-08 01:47:08', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `equipments`
 --
 
@@ -37,6 +78,30 @@ CREATE TABLE `equipments` (
   `image` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `otp_codes`
+--
+
+CREATE TABLE `otp_codes` (
+  `id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `otp_code` varchar(6) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `expires_at` datetime NOT NULL,
+  `is_verified` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `otp_codes`
+--
+
+INSERT INTO `otp_codes` (`id`, `email`, `otp_code`, `created_at`, `expires_at`, `is_verified`) VALUES
+(1, 'linus@gmail.com', '589001', '2026-05-07 15:47:32', '2026-05-07 22:52:32', 0),
+(4, 'wijayaoeymarcelinus@gmail.com', '930970', '2026-05-07 18:29:01', '2026-05-08 01:34:01', 0),
+(7, 'efwarms@gmail.com', '833385', '2026-05-08 06:31:34', '2026-05-08 13:36:34', 1);
 
 -- --------------------------------------------------------
 
@@ -81,6 +146,13 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data untuk tabel `users`
+--
+
+INSERT INTO `users` (`id`, `full_name`, `email`, `role`, `created_at`) VALUES
+('f924601d-078f-4518-b26c-790cf58a41b6', 'Administrator', 'admin@mhslab.com', 'admin', '2026-05-08 06:36:57');
+
 -- --------------------------------------------------------
 
 --
@@ -106,6 +178,13 @@ CREATE TABLE `user_passwords` (
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data untuk tabel `user_passwords`
+--
+
+INSERT INTO `user_passwords` (`id`, `user_id`, `password`) VALUES
+('5d28d68e-914b-4c31-9686-67b8dbecd5ad', 'f924601d-078f-4518-b26c-790cf58a41b6', '$2b$12$DvzteDNxHDtfr8hDrrjYN.JDLWiPNiad9D0L13vmyiGc2IyxjZCma');
+
 -- --------------------------------------------------------
 
 --
@@ -125,9 +204,30 @@ CREATE TABLE `user_tokens` (
 --
 
 --
+-- Indeks untuk tabel `auth_codes`
+--
+ALTER TABLE `auth_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indeks untuk tabel `bind_codes`
+--
+ALTER TABLE `bind_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
 -- Indeks untuk tabel `equipments`
 --
 ALTER TABLE `equipments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `otp_codes`
+--
+ALTER TABLE `otp_codes`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -179,14 +279,38 @@ ALTER TABLE `user_tokens`
 --
 
 --
+-- AUTO_INCREMENT untuk tabel `auth_codes`
+--
+ALTER TABLE `auth_codes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT untuk tabel `bind_codes`
+--
+ALTER TABLE `bind_codes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT untuk tabel `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT untuk tabel `user_tokens`
 --
 ALTER TABLE `user_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
+
+--
+-- Ketidakleluasaan untuk tabel `auth_codes`
+--
+ALTER TABLE `auth_codes`
+  ADD CONSTRAINT `auth_codes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `transactions`
