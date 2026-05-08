@@ -167,10 +167,10 @@ export const googleCallback = (req, res, next) => {
             if (err) return next(err);
 
             if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message: info?.message || 'Google authentication gagal.'
-                });
+                const errorCode = info?.code || 'AUTH_FAILED';
+                const errorMessage = encodeURIComponent(info?.message || 'Google authentication gagal.');
+                const redirectUrl = `${process.env.AUTH_CODE_REDIRECT_URL}?error=${errorCode}&message=${errorMessage}`;
+                return res.redirect(redirectUrl);
             }
 
             const authCodeResult = await requestTokenService('/auth-codes/generate', 'POST', {
@@ -196,10 +196,10 @@ export const discordCallback = (req, res, next) => {
             if (err) return next(err);
 
             if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message: info?.message || 'Discord authentication gagal.'
-                });
+                const errorCode = info?.code || 'AUTH_FAILED';
+                const errorMessage = encodeURIComponent(info?.message || 'Discord authentication gagal.');
+                const redirectUrl = `${process.env.AUTH_CODE_REDIRECT_URL}?error=${errorCode}&message=${errorMessage}`;
+                return res.redirect(redirectUrl);
             }
 
             const authCodeResult = await requestTokenService('/auth-codes/generate', 'POST', {

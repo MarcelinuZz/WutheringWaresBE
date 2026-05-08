@@ -78,12 +78,10 @@ passport.use(new GoogleStrategy(
             );
 
             if (existingUsers.length > 0) {
-                const user = existingUsers[0];
-                await db.query(
-                    'INSERT INTO user_identities (id, user_id, provider, provider_id) VALUES (?, ?, ?, ?)',
-                    [uuidv4(), user.id, 'google', providerId]
-                );
-                return done(null, user);
+                return done(null, false, {
+                    code: 'EMAIL_ALREADY_EXISTS',
+                    message: 'Akun dengan email ini sudah terdaftar. Silakan login dengan metode yang ada, lalu hubungkan akun Google dari halaman Settings.'
+                });
             }
 
             const userId = uuidv4();
@@ -141,12 +139,10 @@ passport.use(new DiscordStrategy(
             );
 
             if (existingUsers.length > 0) {
-                const user = existingUsers[0];
-                await db.query(
-                    'INSERT INTO user_identities (id, user_id, provider, provider_id) VALUES (?, ?, ?, ?)',
-                    [uuidv4(), user.id, 'discord', providerId]
-                );
-                return done(null, user);
+                return done(null, false, {
+                    code: 'EMAIL_ALREADY_EXISTS',
+                    message: 'Akun dengan email ini sudah terdaftar. Silakan login dengan metode yang ada, lalu hubungkan akun Discord dari halaman Settings.'
+                });
             }
 
             const userId = uuidv4();
