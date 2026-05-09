@@ -18,7 +18,7 @@ const router = Router();
 
 router.get('/me', authMiddleware, getMe);
 
-router.put('/change-password', authMiddleware, changePasswordValidator, validate, changePassword);
+router.patch('/change-password', authMiddleware, changePasswordValidator, validate, changePassword);
 
 router.post('/bind/google', authMiddleware, bindProviderValidator, validate, bindGoogle);
 router.delete('/unbind/google', authMiddleware, unbindGoogle);
