@@ -26,6 +26,28 @@ export const getItems = async (req, res, next) => {
     }
 };
 
+export const getItemById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const [item] = await db.query('SELECT * FROM item WHERE id = ?', [id]);
+
+        if (item.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Item tidak ditemukan.'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: item[0]
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const addItem = async (req, res, next) => {
     try {
         const { name, type, description, stock, price, rarity } = req.body;

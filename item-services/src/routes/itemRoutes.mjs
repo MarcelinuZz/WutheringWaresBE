@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getItems, addItem, updateItem, deleteItem } from '../controllers/itemController.mjs';
+import { getItems, getItemById, addItem, updateItem, deleteItem } from '../controllers/itemController.mjs';
 import authMiddleware from '../middleware/authMiddleware.mjs';
 import adminMiddleware from '../middleware/adminMiddleware.mjs';
 import upload from '../middleware/multerConfig.mjs';
@@ -9,6 +9,7 @@ import { addItemValidator, updateItemValidator } from '../validators/itemValidat
 const router = Router();
 
 router.get('/', getItems);
+router.get('/:id', getItemById);
 
 router.post('/', authMiddleware, adminMiddleware, upload.single('image'), addItemValidator, validate, addItem);
 router.put('/:id', authMiddleware, adminMiddleware, upload.single('image'), updateItemValidator, validate, updateItem);
