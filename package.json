@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run dev:gateway\" \"npm run dev:auth\" \"npm run dev:user\" \"npm run dev:email\" \"npm run dev:token\"",
+    "dev": "concurrently \"npm run dev:gateway\" \"npm run dev:auth\" \"npm run dev:user\" \"npm run dev:email\" \"npm run dev:token\" \"npm run dev:item\"",
     "dev:gateway": "cd gateway-services && npm run start:dev",
     "dev:auth": "cd auth-services && npm run start:dev",
     "dev:user": "cd user-services && npm run start:dev",
     "dev:email": "cd email-services && npm run start:dev",
-    "dev:token": "cd token-services && npm run start:dev"
+    "dev:token": "cd token-services && npm run start:dev",
+    "dev:item": "cd item-services && npm run start:dev"
   },
   "keywords": [],
   "author": "",

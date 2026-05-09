@@ -20,6 +20,22 @@ const setupProxyRoutes = () => {
         }
     }));
 
+    router.use('/items', createProxyMiddleware({
+        target: process.env.ITEM_SERVICE_URL,
+        changeOrigin: true,
+        pathRewrite: {
+            '^/items': '/items'
+        }
+    }));
+
+    router.use('/uploads', createProxyMiddleware({
+        target: process.env.ITEM_SERVICE_URL,
+        changeOrigin: true,
+        pathRewrite: {
+            '^/uploads': '/uploads'
+        }
+    }));
+
     return router;
 }
 
