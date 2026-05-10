@@ -12,34 +12,147 @@ VALUES ("5d28d68e-914b-4c31-9686-67b8dbecd5ad", "f924601d-078f-4518-b26c-790cf58
 Root Folder
 ===========
 npm init -y
-npm install concurrently --save-dev
+npm install cors express mysql2
+npm install concurrently nodemon --save-dev
 
 gateway-services Folder
 ======================
 npm init -y
-npm install express mysql2 cors dotenv http-proxy-middleware morgan
+npm install cors dotenv express http-proxy-middleware morgan mysql2
 npm install --save-dev nodemon
+
+.env :
+PORT=3000
+DB_HOST="localhost"
+DB_USER="root"
+DB_PASSWORD=""
+DB_NAME="wuthering_wares"
+AUTH_SERVICE_URL="http://localhost:3001"
+USER_SERVICE_URL="http://localhost:3002"
+ITEM_SERVICE_URL="http://localhost:3005"
+ORDER_SERVICE_URL="http://localhost:3006"
 
 auth-services Folder
 ====================
 npm init -y
-npm install express cors dotenv morgan mysql2 bcryptjs express-validator passport passport-local passport-google-oauth20 passport-discord-auth uuid
+npm install bcryptjs cors dotenv express express-validator morgan mysql2 passport passport-discord-auth passport-google-oauth20 passport-local uuid
 npm install --save-dev nodemon
+
+.env :
+UNTUK CLIENT DAN SECRET ISI DENGAN PUNYA KALIAN MASING MASING
+
+PORT=3001
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=wuthering_wares
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=
+
+DISCORD_CLIENT_ID=
+DISCORD_CLIENT_SECRET=
+DISCORD_CALLBACK_URL=
+
+GOOGLE_BIND_CALLBACK_URL=http://localhost:3000/api/auth/bind/google/callback
+DISCORD_BIND_CALLBACK_URL=http://localhost:3000/api/auth/bind/discord/callback
+
+TOKEN_SERVICE_URL=http://localhost:3004
+EMAIL_SERVICE_URL=http://localhost:3003
+INTERNAL_API_KEY=mhslab-internal-secret-key-2026
+
+AUTH_CODE_REDIRECT_URL=http://localhost:8080/auth/success
+BIND_CODE_REDIRECT_URL=http://localhost:8080/bind/success
 
 user-services Folder
 ====================
 npm init -y
-npm install express cors dotenv morgan mysql2 bcryptjs express-validator uuid
+npm install bcryptjs cors dotenv express express-validator morgan mysql2 uuid
 npm install --save-dev nodemon
+
+.env :
+PORT=3002
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=wuthering_wares
+
+TOKEN_SERVICE_URL=http://localhost:3004
+INTERNAL_API_KEY=mhslab-internal-secret-key-2026
+
 
 token-services Folder
 =====================
 npm init -y
-npm install express cors dotenv morgan mysql2 express-validator uuid
+npm install cors dotenv express express-validator morgan mysql2 uuid
 npm install --save-dev nodemon
+
+.env :
+PORT=3004
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=wuthering_wares
+INTERNAL_API_KEY=mhslab-internal-secret-key-2026
+
 
 email-services Folder
 =====================
 npm init -y
-npm install express cors dotenv morgan nodemailer express-validator
+npm install cors dotenv express express-validator morgan nodemailer
 npm install --save-dev nodemon
+
+.env :
+PORT=3003
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=projeksoptware@gmail.com
+SMTP_PASS=ktun lwso kbmf pwmc
+INTERNAL_API_KEY=mhslab-internal-secret-key-2026
+
+
+item-services Folder
+====================
+npm init -y
+npm install cors dotenv express express-validator morgan multer mysql2 uuid
+npm install --save-dev nodemon
+
+.env :
+PORT=3005
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=wuthering_wares
+
+TOKEN_SERVICE_URL=http://localhost:3004
+USER_SERVICE_URL=http://localhost:3002
+INTERNAL_API_KEY=mhslab-internal-secret-key-2026
+
+
+order-services Folder
+=====================
+npm init -y
+npm install @ngrok/ngrok cors dotenv express express-validator midtrans-client morgan mysql2 uuid
+npm install --save-dev nodemon
+
+.env :
+PORT=3006
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=wuthering_wares
+
+TOKEN_SERVICE_URL=http://localhost:3004
+ITEM_SERVICE_URL=http://localhost:3005
+INTERNAL_API_KEY=mhslab-internal-secret-key-2026
+
+MIDTRANS_SERVER_KEY=SB-Mid-server-8xnIH9MAMHs0OJV9tl8IT2cx
+MIDTRANS_CLIENT_KEY=SB-Mid-client-Qr5y6xffpddyd9__
+MIDTRANS_IS_PRODUCTION=false
+
+ISI NGROK_AUTHTOKEN DENGAN CONFIGURASI ANDA
+NGROK_AUTHTOKEN=
+
