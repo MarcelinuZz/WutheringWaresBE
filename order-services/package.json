@@ -1,0 +1,29 @@
+{
+  "name": "order-services",
+  "version": "1.0.0",
+  "main": "src/app.mjs",
+  "type": "module",
+  "scripts": {
+    "start:dev": "nodemon src/app.mjs",
+    "start": "node src/app.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@ngrok/ngrok": "^1.7.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-validator": "7.2.1",
+    "midtrans-client": "^1.4.2",
+    "morgan": "^1.10.1",
+    "mysql2": "^3.22.3",
+    "uuid": "^14.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

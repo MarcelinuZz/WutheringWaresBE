@@ -36,6 +36,22 @@ const setupProxyRoutes = () => {
         }
     }));
 
+    router.use('/cart', createProxyMiddleware({
+        target: process.env.ORDER_SERVICE_URL,
+        changeOrigin: true,
+        pathRewrite: {
+            '^/cart': '/cart'
+        }
+    }));
+
+    router.use('/orders', createProxyMiddleware({
+        target: process.env.ORDER_SERVICE_URL,
+        changeOrigin: true,
+        pathRewrite: {
+            '^/orders': '/orders'
+        }
+    }));
+
     return router;
 }
 
