@@ -1,158 +1,24 @@
-MYSQL
-=====
-import wuthering_wares.sql
+Install Guide untuk PocketLog Microservices
+==========================================
 
-lalu jalankan query
-INSERT INTO users (id, full_name, email, role) 
-VALUES ("f924601d-078f-4518-b26c-790cf58a41b6", 'Administrator', 'admin@mhslab.com', 'admin');
+Prasyarat:
+----------
+1. Pastikan Docker dan Docker Compose (versi 2.22+) sudah terinstal di komputer Anda (Docker Desktop disarankan).
+2. Jika ada, konfigurasi file `.env` di masing-masing folder microservice sesuai kebutuhan (misal: isi kredensial Midtrans, Google OAuth, Discord, SMTP, dll). File `.env` akan dibaca otomatis.
+   *Catatan: Variabel untuk DB_HOST dan URL antar service (seperti TOKEN_SERVICE_URL) akan di-override otomatis oleh docker-compose, jadi tidak perlu pusing memikirkan localhost.*
 
-INSERT INTO user_passwords (id, user_id, password)
-VALUES ("5d28d68e-914b-4c31-9686-67b8dbecd5ad", "f924601d-078f-4518-b26c-790cf58a41b6", '$2b$12$DvzteDNxHDtfr8hDrrjYN.JDLWiPNiad9D0L13vmyiGc2IyxjZCma');
+Cara Menjalankan:
+-----------------
+Buka terminal atau command prompt di root folder proyek ini (sejajar dengan file `docker-compose.yml`), lalu jalankan:
 
-Root Folder
-===========
-npm init -y
-npm install cors express mysql2
-npm install concurrently nodemon --save-dev
+    docker compose watch
 
-gateway-services Folder
-======================
-npm init -y
-npm install cors dotenv express http-proxy-middleware morgan mysql2
-npm install --save-dev nodemon
+Perintah di atas akan:
+1. Mem-build dan menjalankan semua 7 microservices beserta 1 database MySQL.
+2. Menginisialisasi tabel database `wuthering_wares` beserta akun admin awal secara otomatis.
+3. Mengaktifkan *watch mode*. Setiap perubahan pada source code di lokal akan otomatis di-sinkronisasikan ke dalam container dan server akan di-restart otomatis (Hot Reload).
 
-.env :
-PORT=3000
-DB_HOST="localhost"
-DB_USER="root"
-DB_PASSWORD=""
-DB_NAME="wuthering_wares"
-AUTH_SERVICE_URL="http://localhost:3001"
-USER_SERVICE_URL="http://localhost:3002"
-ITEM_SERVICE_URL="http://localhost:3005"
-ORDER_SERVICE_URL="http://localhost:3006"
+Untuk menghentikan semua service, tekan `Ctrl + C` di terminal tersebut.
+Untuk membersihkan dan menghapus semua container beserta data database (jika ingin di-reset ulang), jalankan perintah:
 
-auth-services Folder
-====================
-npm init -y
-npm install bcryptjs cors dotenv express express-validator morgan mysql2 passport passport-discord-auth passport-google-oauth20 passport-local uuid
-npm install --save-dev nodemon
-
-.env :
-UNTUK CLIENT DAN SECRET ISI DENGAN PUNYA KALIAN MASING MASING
-
-PORT=3001
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=wuthering_wares
-
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_CALLBACK_URL=
-
-DISCORD_CLIENT_ID=
-DISCORD_CLIENT_SECRET=
-DISCORD_CALLBACK_URL=
-
-GOOGLE_BIND_CALLBACK_URL=http://localhost:3000/api/auth/bind/google/callback
-DISCORD_BIND_CALLBACK_URL=http://localhost:3000/api/auth/bind/discord/callback
-
-TOKEN_SERVICE_URL=http://localhost:3004
-EMAIL_SERVICE_URL=http://localhost:3003
-INTERNAL_API_KEY=mhslab-internal-secret-key-2026
-
-AUTH_CODE_REDIRECT_URL=http://localhost:8080/auth/success
-BIND_CODE_REDIRECT_URL=http://localhost:8080/bind/success
-
-user-services Folder
-====================
-npm init -y
-npm install bcryptjs cors dotenv express express-validator morgan mysql2 uuid
-npm install --save-dev nodemon
-
-.env :
-PORT=3002
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=wuthering_wares
-
-TOKEN_SERVICE_URL=http://localhost:3004
-INTERNAL_API_KEY=mhslab-internal-secret-key-2026
-
-
-token-services Folder
-=====================
-npm init -y
-npm install cors dotenv express express-validator morgan mysql2 uuid
-npm install --save-dev nodemon
-
-.env :
-PORT=3004
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=wuthering_wares
-INTERNAL_API_KEY=mhslab-internal-secret-key-2026
-
-
-email-services Folder
-=====================
-npm init -y
-npm install cors dotenv express express-validator morgan nodemailer
-npm install --save-dev nodemon
-
-.env :
-PORT=3003
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=projeksoptware@gmail.com
-SMTP_PASS=ktun lwso kbmf pwmc
-INTERNAL_API_KEY=mhslab-internal-secret-key-2026
-
-
-item-services Folder
-====================
-npm init -y
-npm install cors dotenv express express-validator morgan multer mysql2 uuid
-npm install --save-dev nodemon
-
-.env :
-PORT=3005
-
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=wuthering_wares
-
-TOKEN_SERVICE_URL=http://localhost:3004
-USER_SERVICE_URL=http://localhost:3002
-INTERNAL_API_KEY=mhslab-internal-secret-key-2026
-
-
-order-services Folder
-=====================
-npm init -y
-npm install @ngrok/ngrok cors dotenv express express-validator midtrans-client morgan mysql2 uuid
-npm install --save-dev nodemon
-
-.env :
-PORT=3006
-
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=wuthering_wares
-
-TOKEN_SERVICE_URL=http://localhost:3004
-ITEM_SERVICE_URL=http://localhost:3005
-INTERNAL_API_KEY=mhslab-internal-secret-key-2026
-
-MIDTRANS_SERVER_KEY=SB-Mid-server-8xnIH9MAMHs0OJV9tl8IT2cx
-MIDTRANS_CLIENT_KEY=SB-Mid-client-Qr5y6xffpddyd9__
-MIDTRANS_IS_PRODUCTION=false
-
-ISI NGROK_AUTHTOKEN DENGAN CONFIGURASI ANDA
-NGROK_AUTHTOKEN=
-
+    docker compose down -v
