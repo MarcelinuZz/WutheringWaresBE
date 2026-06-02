@@ -32,7 +32,7 @@ const setupProxyRoutes = () => {
         target: process.env.ITEM_SERVICE_URL,
         changeOrigin: true,
         pathRewrite: {
-            '^/uploads': '/uploads'
+            '^/': '/uploads/'
         }
     }));
 
