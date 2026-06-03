@@ -36,7 +36,7 @@ router.get('/google/callback', googleCallback);
 router.get('/discord', discordAuth);
 router.get('/discord/callback', discordCallback);
 
-router.get('/exchange-token', exchangeTokenValidator, validate, exchangeToken);
+router.post('/exchange-token', exchangeTokenValidator, validate, exchangeToken);
 
 router.get('/bind/google', googleBindAuth);
 router.get('/bind/google/callback', googleBindCallback);

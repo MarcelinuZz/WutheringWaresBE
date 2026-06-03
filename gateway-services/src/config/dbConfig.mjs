@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 
-// Isi di env dengan data masing masing
+
 const dbConfig = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

@@ -158,7 +158,8 @@ export const login = (req, res, next) => {
 
 export const googleAuth = passport.authenticate('google', {
     session: false,
-    scope: ['profile', 'email']
+    scope: ['profile', 'email'],
+    prompt: 'select_account'  
 });
 
 export const googleCallback = (req, res, next) => {
@@ -187,7 +188,8 @@ export const googleCallback = (req, res, next) => {
 
 
 export const discordAuth = passport.authenticate('discord', {
-    session: false
+    session: false,
+    prompt: 'consent'  
 });
 
 export const discordCallback = (req, res, next) => {
@@ -235,7 +237,8 @@ export const exchangeToken = async (req, res, next) => {
 
 export const googleBindAuth = passport.authenticate('google-bind', {
     session: false,
-    scope: ['profile', 'email']
+    scope: ['profile', 'email'],
+    prompt: 'select_account'  
 });
 
 export const googleBindCallback = (req, res, next) => {
@@ -244,10 +247,9 @@ export const googleBindCallback = (req, res, next) => {
             if (err) return next(err);
 
             if (!profile) {
-                return res.status(401).json({
-                    success: false,
-                    message: info?.message || 'Google bind authentication gagal.'
-                });
+                const errorMessage = encodeURIComponent(info?.message || 'Google bind authentication gagal.');
+                const redirectUrl = `${process.env.BIND_CODE_REDIRECT_URL}?error=BIND_FAILED&message=${errorMessage}`;
+                return res.redirect(redirectUrl);
             }
 
             const bindCodeResult = await requestTokenService('/bind-codes/generate', 'POST', {
@@ -264,7 +266,8 @@ export const googleBindCallback = (req, res, next) => {
 };
 
 export const discordBindAuth = passport.authenticate('discord-bind', {
-    session: false
+    session: false,
+    prompt: 'consent'
 });
 
 export const discordBindCallback = (req, res, next) => {
@@ -273,10 +276,9 @@ export const discordBindCallback = (req, res, next) => {
             if (err) return next(err);
 
             if (!profile) {
-                return res.status(401).json({
-                    success: false,
-                    message: info?.message || 'Discord bind authentication gagal.'
-                });
+                const errorMessage = encodeURIComponent(info?.message || 'Discord bind authentication gagal.');
+                const redirectUrl = `${process.env.BIND_CODE_REDIRECT_URL}?error=BIND_FAILED&message=${errorMessage}`;
+                return res.redirect(redirectUrl);
             }
 
             const bindCodeResult = await requestTokenService('/bind-codes/generate', 'POST', {
