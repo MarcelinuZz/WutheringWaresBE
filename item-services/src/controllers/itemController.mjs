@@ -5,7 +5,7 @@ export const getItems = async (req, res, next) => {
     try {
         const { type } = req.query;
 
-        let query = 'SELECT id, name, stock, price, image FROM item';
+        let query = 'SELECT id, name, type, stock, price, rarity, image FROM item';
         const queryParams = [];
 
         if (type) {

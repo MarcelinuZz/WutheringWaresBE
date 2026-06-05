@@ -33,9 +33,9 @@ app.listen(PORT, async () => {
             });
 
             const webhookUrl = `${listener.url()}/orders/notification`;
-            console.log(`Ngrok Active | Webhook URL: ${webhookUrl}`);
+            console.log(`Ngrok Order Active : ${webhookUrl}`);
         } catch (err) {
-            console.error('[Ngrok] Gagal membuat tunnel:', err.message);
+            console.error('Ngrok Order Failed :', err.message);
         }
     }
 });
